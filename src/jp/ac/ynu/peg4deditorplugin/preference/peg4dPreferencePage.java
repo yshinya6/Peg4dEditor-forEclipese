@@ -1,6 +1,7 @@
 package jp.ac.ynu.peg4deditorplugin.preference;
 
 import org.eclipse.jface.preference.FieldEditor;
+import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferencePageContainer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
@@ -23,16 +24,16 @@ public class peg4dPreferencePage extends FieldEditorPreferencePage implements
 
 	public peg4dPreferencePage() {
 		super(GRID);
-		setPreferenceStore(.getDefault().getPreferenceStore());
+		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 	}
 
 	public peg4dPreferencePage(String title) {
-		super(title);
+		super();
 		// TODO 自動生成されたコンストラクター・スタブ
 	}
 
 	public peg4dPreferencePage(String title, ImageDescriptor image) {
-		super(title, image);
+		super();
 		// TODO 自動生成されたコンストラクター・スタブ
 	}
 
@@ -184,6 +185,12 @@ public class peg4dPreferencePage extends FieldEditorPreferencePage implements
 	public void setVisible(boolean visible) {
 		// TODO 自動生成されたメソッド・スタブ
 
+	}
+
+	@Override
+	protected void createFieldEditors() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -2,45 +2,50 @@ package jp.ac.ynu.peg4deditorplugin.editors;
 
 import org.eclipse.jface.text.rules.*;
 import org.eclipse.jface.text.*;
-import org.eclipse.ui.internal.handlers.WizardHandler.New;
 
 class PEGScanner extends RuleBasedScanner {
 	public PEGScanner(ColorManager manager) {
 		IToken connecter =
 			new Token(
 				new TextAttribute(
-					manager.getColor(IPEGColorConstants.PEG_CONNECTER)));
+					manager.getColor(IPegColorConstants.PEG_CONNECTER)));
 		IToken tag =
 			new Token(
 				new TextAttribute(
-					manager.getColor(IPEGColorConstants.TAG)));
-
-		IRule[] rules = new IRule[3];
-		//Add rule for processing instructions
-		rules[0] = new SingleLineRule("@", " ", connecter);
-		rules[1] = new SingleLineRule("#", " ", tag);
-		// Add generic whitespace rule.
-		rules[2] = new WhitespaceRule(new PEGWhitespaceDetector());
-
-		setRules(rules);
-	}
-}
-
-class PEGTagScanner extends RuleBasedScanner {
-
-	public PEGTagScanner(ColorManager manager) {
+					manager.getColor(IPegColorConstants.TAG)));
 		IToken string =
-			new Token(
-				new TextAttribute(manager.getColor(IPEGColorConstants.STRING)));
+				new Token(
+					new TextAttribute(manager.getColor(IPegColorConstants.STRING)));
+		IToken label =
+				new Token(
+						new TextAttribute(
+							manager.getColor(IPegColorConstants.LABEL)));
+		IToken insert =
+				new Token(
+						new TextAttribute(
+							manager.getColor(IPegColorConstants.INSERT)));
+		IToken character =
+				new Token(
+						new TextAttribute(
+							manager.getColor(IPegColorConstants.PEG_CHARACTER)));
+		IToken example =
+				new Token(
+						new TextAttribute(
+							manager.getColor(IPegColorConstants.PEG_EXAMPLE)));
 
-		IRule[] rules = new IRule[3];
 
-		// Add rule for double quotes
-		rules[0] = new SingleLineRule("\"", "\"", string, '\\');
-		// Add a rule for single quotes
-		rules[1] = new SingleLineRule("'", "'", string, '\\');
-		// Add generic whitespace rule.
-		rules[2] = new WhitespaceRule(new PEGWhitespaceDetector());
+		
+		IRule[] rules = {
+		new SingleLineRule("^", "=", label),
+		new ConnectorRule(connecter),
+		new tagRule(tag),
+		new SingleLineRule("`", "`", insert),
+		new SingleLineRule("\"", "\"", string),
+		new SingleLineRule("'", "'", string),
+		new SingleLineRule("[example:", "]", example),
+		new SingleLineRule("[", "]", character),
+		new WhitespaceRule(new PegWhitespaceDetector())
+		};
 
 		setRules(rules);
 	}

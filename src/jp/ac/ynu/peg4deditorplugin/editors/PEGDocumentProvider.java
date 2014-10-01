@@ -6,17 +6,16 @@ import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 
-public class PEGDocumentProvider extends FileDocumentProvider {
+public class PegDocumentProvider extends FileDocumentProvider {
 
 	protected IDocument createDocument(Object element) throws CoreException {
 		IDocument document = super.createDocument(element);
 		if (document != null) {
 			IDocumentPartitioner partitioner =
 				new FastPartitioner(
-					new PEGPartitionScanner(),
+					new PegPartitionScanner(),
 					new String[] {
-						PEGPartitionScanner.PEG_TAG,
-						PEGPartitionScanner.PEG_COMMENT });
+						PegPartitionScanner.PEG_COMMENT });
 			partitioner.connect(document);
 			document.setDocumentPartitioner(partitioner);
 		}

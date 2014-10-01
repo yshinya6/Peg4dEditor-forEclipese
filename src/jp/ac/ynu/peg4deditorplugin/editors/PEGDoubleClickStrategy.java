@@ -2,7 +2,7 @@ package jp.ac.ynu.peg4deditorplugin.editors;
 
 import org.eclipse.jface.text.*;
 
-public class PEGDoubleClickStrategy implements ITextDoubleClickStrategy {
+public class PegDoubleClickStrategy implements ITextDoubleClickStrategy {
 	protected ITextViewer fText;
 
 	public void doubleClicked(ITextViewer part) {
