@@ -47,4 +47,11 @@ public class Peg4dEditor extends TextEditor {
 		PegHyperlinkDetector detector = configuration.getPegHyperlinkDetector();
 		detector.init(this);
 	}
+
+	@Override
+	protected void initializeKeyBindingScopes() {
+		setKeyBindingScopes(new String[] { "org.eclipse.ui.textEditorScope",
+				"peg4d-editor-plugin.context" });
+	}
+
 }
