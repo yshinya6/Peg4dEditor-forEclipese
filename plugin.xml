@@ -9,7 +9,7 @@
             extensions="peg,p4d"
             icon="icons/sample.gif"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
-            class="jp.ac.ynu.peg4deditorplugin.editors.Peg4dEditor"
+            class="org.peg4d.editorplugin.editors.Peg4dEditor"
             id="jp.ac.ynu.peg4deditorplugin.editors.Peg4dEditor">
       </editor>
    </extension>
@@ -17,7 +17,7 @@
     <extension
          point="org.eclipse.ui.console.consolePatternMatchListeners">
       <consolePatternMatchListener
-            class="jp.ac.ynu.peg4deditorplugin.editors.PegConsolePatternMatcher"
+            class="org.peg4d.editorplugin.editors.PegConsolePatternMatcher"
             id="jp.ac.ynu.peg4deditorplugin.editors.PegConsolePatternMatcher"
             regex="\(.*:[0-9]*\)">
             <enablement> </enablement>
@@ -53,7 +53,7 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="jp.ac.ynu.peg4deditorplugin.editors.Peg4dHyperlinkHandler"
+            class="org.peg4d.editorplugin.editors.Peg4dHyperlinkHandler"
             commandId="peg4d-editor-plugin.jumplink-command">
       </handler>
    </extension>
