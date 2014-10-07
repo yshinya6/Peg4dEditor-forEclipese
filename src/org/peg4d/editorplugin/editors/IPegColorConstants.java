@@ -14,5 +14,5 @@ public interface IPegColorConstants {
 	RGB ANGLE = new RGB(139, 0, 139);
 	RGB GROUOP = new RGB(0, 0, 0);
 	RGB LABEL = new RGB(0, 0, 255);
-	RGB INSERT = new RGB(139, 0, 0);
+	RGB VALUE = new RGB(139, 0, 0);
 }

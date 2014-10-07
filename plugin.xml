@@ -66,5 +66,16 @@
             sequence="F3">
       </key>
    </extension>
-
+   
+   <extension
+        point="org.eclipse.ui.preferencePages">
+   <page
+           class="org.peg4d.editorplugin.preference.peg4dPreferencePage"
+           id="peg4d-editor-plugin.page"
+           name="Peg4d Editor"/>
+   </extension>
+   <extension 
+         point="org.eclipse.core.runtime.preferences">
+      <initializer class="org.peg4d.editorplugin.preference.Peg4dPreferenceInitializer"/>
+   </extension>
 </plugin>
