@@ -98,24 +98,33 @@ class labelRule implements IRule {
 			do {
 				c = scanner.read();
 			} while ((isWordPart((char) c)));
-			scanner.unread();
 			do {
 				c = scanner.read();
+				if (c == '[') {
+					c = scanner.read();
+					if (c == 'e') {
+						scanner.unread();
+						scanner.unread();
+						return token;
+					}
+				}
 				if (c == '=') {
 					scanner.unread();
 					return token;
 				}
 			} while (isWhiteSpace((char) c));
 			scanner.unread();
+			scanner.unread();
+			return Token.UNDEFINED;
+		} else {
+			scanner.unread();
 			return Token.UNDEFINED;
 		}
-		scanner.unread();
-		return Token.UNDEFINED;
 	}
 
 	protected Boolean isWordPart(char c) {
 		return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z')
-				|| ('0' <= c && c <= '9');
+				|| ('0' <= c && c <= '9') || (c == '_');
 	}
 
 	protected Boolean isLetterPart(char c) {
@@ -154,3 +163,27 @@ class tokenRule implements IRule {
 				|| ('0' <= c && c <= '9');
 	}
 }
+
+// class tokenRule2 {
+// private IToken token;
+//
+// public tokenRule2(IToken token) {
+// Assert.isNotNull(token);
+// this.token = token;
+// }
+//
+// public IToken evaluate() {
+// IDocument document = PegUtil.getDocFromEditor(PegUtil.getActiveFile());
+// String source = document.get();
+//
+// Pattern p = Pattern.compile("^[ \t]*" + "[a-zA-Z][a-zA-Z0-9]*"
+// + "(\\s*\\[[^\\]]*\\])?" + "\\s*=", Pattern.MULTILINE);
+// // Pattern p = Pattern.compile(word + "[\\s]*=");
+// Matcher m = p.matcher(source);
+// if (m.find()) {
+//
+// }
+// return token;
+// }
+//
+// }

@@ -19,8 +19,8 @@ public class PegHyperlinkDetector implements IHyperlinkDetector {
 
 	private int getLabelOffset(String source, String word) {
 		// d + "[ \n\t\r]*="
-		Pattern p = Pattern.compile(word + "([\\s]* ¥[ [(?!¥]).]* ¥] )?"
-				+ "[\\s]*=");
+		Pattern p = Pattern.compile("^[ \t]*" + word + "(\\s*\\[[^\\]]*\\])?"
+				+ "\\s*=", Pattern.MULTILINE);
 		// Pattern p = Pattern.compile(word + "[\\s]*=");
 		Matcher m = p.matcher(source);
 		boolean matched = m.find();
