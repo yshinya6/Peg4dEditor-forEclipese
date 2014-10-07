@@ -24,8 +24,6 @@ public class PegHyperlinkDetector implements IHyperlinkDetector {
 		// Pattern p = Pattern.compile(word + "[\\s]*=");
 		Matcher m = p.matcher(source);
 		boolean matched = m.find();
-		System.out.println(matched);
-		System.out.println(word);
 		return m.start();
 	}
 
