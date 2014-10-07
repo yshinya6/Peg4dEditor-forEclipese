@@ -66,7 +66,8 @@ public class Peg4dHyperlinkHandler extends AbstractHandler {
 
 	private int getLabelOffset(String source, String word) {
 		// d + "[ \n\t\r]*="
-		Pattern p = Pattern.compile(word + "[ \n\r\t]*=");
+		Pattern p = Pattern.compile("^[ \t]*" + word + "(\\s*\\[[^\\]]*\\])?"
+				+ "\\s*=", Pattern.MULTILINE);
 		Matcher m = p.matcher(source);
 		m.find();
 		return m.start();
