@@ -78,4 +78,17 @@
          point="org.eclipse.core.runtime.preferences">
       <initializer class="org.peg4d.editorplugin.preference.Peg4dPreferenceInitializer"/>
    </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <viewerContribution
+            id="Peg4dEditorPlug-in.viewerContribution1"
+            targetID="#TextEditorContext">
+         <action
+               class="org.peg4d.editorplugin.editors.openAction"
+               id="org.peg4d.editroplugin.editors.openAction"
+               label="Open Declaration"
+               menubarPath="additions">
+         </action>
+      </viewerContribution>
+   </extension>
 </plugin>
