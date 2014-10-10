@@ -44,11 +44,14 @@ class PEGScanner extends RuleBasedScanner {
 				manager.getColor(PreferenceConstants.COLOR_CHARACTER)));
 		IToken example = new Token(new TextAttribute(
 				manager.getColor(PreferenceConstants.COLOR_EXAMPLE)));
+		IToken function = new Token(new TextAttribute(
+				manager.getColor(PreferenceConstants.COLOR_FUNCTION)));
 
 		IRule[] rules = { new tagRule(tag), new ConnectorRule(connector),
 				new labelRule(label), new SingleLineRule("`", "`", value),
 				new SingleLineRule("\"", "\"", string),
 				new SingleLineRule("'", "'", string),
+				new MultiLineRule("<", ">", function),
 				new MultiLineRule("[example:", "]", example),
 				new SingleLineRule("[", "]", character), /* new tokenRule(token), */
 				new WhitespaceRule(new PegWhitespaceDetector()),

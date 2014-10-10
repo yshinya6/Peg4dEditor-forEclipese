@@ -1,6 +1,11 @@
 package org.peg4d.editorplugin.editors;
 
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.ITextViewerExtension2;
+import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.MatchingCharacterPainter;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -11,29 +16,36 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 
 import peg4deditorplug_in.Activator;
 
 public class Peg4dEditor extends TextEditor implements IPropertyChangeListener {
 	private ColorManager colorManager;
+	public static final String ASSIST_ACTION_ID = "Peg4dEditor.Assist";
 
 	public Peg4dEditor() {
 		super();
 		colorManager = new ColorManager();
-		setSourceViewerConfiguration(new PegConfiguration(colorManager));
 		setDocumentProvider(new PegDocumentProvider());
-		// add preference listener
-		Activator.getDefault().getPreferenceStore()
-				.addPropertyChangeListener(this);
+		setSourceViewerConfiguration(new PegConfiguration(colorManager));
+
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		store.addPropertyChangeListener(this);
+		// // add preference listener
+		// Activator.getDefault().getPreferenceStore()
+		// .addPropertyChangeListener(this);
 	}
 
 	@Override
 	public void dispose() {
+		// // delete preference listener
+		// Activator.getDefault().getPreferenceStore()
+		// .removePropertyChangeListener(this);
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		store.removePropertyChangeListener(this);
 		colorManager.dispose();
 		super.dispose();
-		// delete preference listener
-		Activator.getDefault().getPreferenceStore()
-				.removePropertyChangeListener(this);
 	}
 
 	@Override
@@ -71,4 +83,19 @@ public class Peg4dEditor extends TextEditor implements IPropertyChangeListener {
 				"peg4d-editor-plugin.context" });
 	}
 
+	@Override
+	protected void createActions() {
+		super.createActions();
+		IAction contentAssistAction = new Action("Contents Assist") {
+			@Override
+			public void run() {
+				ITextOperationTarget target = (ITextOperationTarget) Peg4dEditor.this
+						.getAdapter(ITextOperationTarget.class);
+				target.doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
+			}
+		};
+		contentAssistAction
+				.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
+		setAction(ASSIST_ACTION_ID, contentAssistAction);
+	}
 }

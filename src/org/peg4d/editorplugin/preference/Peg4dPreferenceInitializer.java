@@ -30,6 +30,8 @@ public class Peg4dPreferenceInitializer extends AbstractPreferenceInitializer {
 				StringConverter.asString(IPegColorConstants.VALUE));
 		store.setDefault(PreferenceConstants.COLOR_LABEL,
 				StringConverter.asString(IPegColorConstants.LABEL));
+		store.setDefault(PreferenceConstants.COLOR_FUNCTION,
+				StringConverter.asString(IPegColorConstants.PEG_FUNCTION));
 	}
 
 }

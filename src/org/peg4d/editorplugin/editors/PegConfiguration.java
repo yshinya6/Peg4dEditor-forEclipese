@@ -3,6 +3,8 @@ package org.peg4d.editorplugin.editors;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.TextAttribute;
+import org.eclipse.jface.text.contentassist.ContentAssistant;
+import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
@@ -93,4 +95,17 @@ public class PegConfiguration extends SourceViewerConfiguration {
 		return myDetectors;
 	}
 
+	@Override
+	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+		ContentAssistant assistant = new ContentAssistant();
+
+		PegContentAssistProcessor processor = new PegContentAssistProcessor();
+		assistant.setContentAssistProcessor(processor,
+				IDocument.DEFAULT_CONTENT_TYPE);
+		assistant.enableAutoActivation(true);
+		assistant.setAutoActivationDelay(350);
+		assistant.enablePrefixCompletion(true);
+		assistant.install(sourceViewer);
+		return assistant;
+	}
 }

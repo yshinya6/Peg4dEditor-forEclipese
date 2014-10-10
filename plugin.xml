@@ -70,7 +70,7 @@
    <extension
         point="org.eclipse.ui.preferencePages">
    <page
-           class="org.peg4d.editorplugin.preference.peg4dPreferencePage"
+           class="org.peg4d.editorplugin.preference.Peg4dPreferencePage"
            id="peg4d-editor-plugin.page"
            name="Peg4d Editor"/>
    </extension>

@@ -7,36 +7,39 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import peg4deditorplug_in.Activator;
 
-public class peg4dPreferencePage extends FieldEditorPreferencePage implements
+public class Peg4dPreferencePage extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage {
 
 	// private Text text;
 
-	public peg4dPreferencePage() {
+	public Peg4dPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 	}
 
 	@Override
 	protected void createFieldEditors() {
+
+		addField(new ColorFieldEditor(PreferenceConstants.COLOR_DEFAULT,
+				"Default", getFieldEditorParent()));
+		addField(new ColorFieldEditor(PreferenceConstants.COLOR_COMMENT,
+				"Comment", getFieldEditorParent()));
 		addField(new ColorFieldEditor(PreferenceConstants.COLOR_TAG,
-				"tag (#ABC)", getFieldEditorParent()));
+				"Tag (#ABC)", getFieldEditorParent()));
 		addField(new ColorFieldEditor(PreferenceConstants.COLOR_CONNECTOR,
 				"Connector (@ABC)", getFieldEditorParent()));
-		addField(new ColorFieldEditor(PreferenceConstants.COLOR_COMMENT,
-				"comment", getFieldEditorParent()));
-		addField(new ColorFieldEditor(PreferenceConstants.COLOR_STRING,
-				"strings (\"ABC\")", getFieldEditorParent()));
-		addField(new ColorFieldEditor(PreferenceConstants.COLOR_CHARACTER,
-				"regex character ([ABC])", getFieldEditorParent()));
-		addField(new ColorFieldEditor(PreferenceConstants.COLOR_DEFAULT,
-				"default", getFieldEditorParent()));
-		addField(new ColorFieldEditor(PreferenceConstants.COLOR_EXAMPLE,
-				"example ([example: ])", getFieldEditorParent()));
 		addField(new ColorFieldEditor(PreferenceConstants.COLOR_VALUE,
-				"value (`ABC`)", getFieldEditorParent()));
+				"Value (`ABC`)", getFieldEditorParent()));
+		addField(new ColorFieldEditor(PreferenceConstants.COLOR_STRING,
+				"Strings (\"ABC\")", getFieldEditorParent()));
+		addField(new ColorFieldEditor(PreferenceConstants.COLOR_CHARACTER,
+				"Pattern ([ABC])", getFieldEditorParent()));
+		addField(new ColorFieldEditor(PreferenceConstants.COLOR_FUNCTION,
+				"Function (<ABC >)", getFieldEditorParent()));
+		addField(new ColorFieldEditor(PreferenceConstants.COLOR_EXAMPLE,
+				"Example ([example: ])", getFieldEditorParent()));
 		addField(new ColorFieldEditor(PreferenceConstants.COLOR_LABEL,
-				"rule name (ABC = ...)", getFieldEditorParent()));
+				"Rule Name (ABC = ...)", getFieldEditorParent()));
 	}
 
 	// public peg4dPreferencePage(String title) {
@@ -131,7 +134,6 @@ public class peg4dPreferencePage extends FieldEditorPreferencePage implements
 	//
 	// }
 
-
 	// @Override
 	// public Control getControl() {
 	// // TODO 自動生成されたメソッド・スタブ
@@ -167,7 +169,6 @@ public class peg4dPreferencePage extends FieldEditorPreferencePage implements
 	// // TODO 自動生成されたメソッド・スタブ
 	// return null;
 	// }
-
 
 	// @Override
 	// public void setImageDescriptor(ImageDescriptor image) {

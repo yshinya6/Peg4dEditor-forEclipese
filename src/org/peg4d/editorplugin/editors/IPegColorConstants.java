@@ -8,6 +8,7 @@ public interface IPegColorConstants {
 	RGB PEG_OBJECT = new RGB(0, 0, 0);
 	RGB PEG_CHARACTER = new RGB(128, 128, 0);
 	RGB PEG_EXAMPLE = new RGB(47, 79, 79);
+	RGB PEG_FUNCTION = new RGB(139, 0, 139);
 	RGB STRING = new RGB(0, 128, 0);
 	RGB DEFAULT = new RGB(0, 0, 0);
 	RGB TAG = new RGB(0, 0, 128);
