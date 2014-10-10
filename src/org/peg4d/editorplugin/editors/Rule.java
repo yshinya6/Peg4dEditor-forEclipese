@@ -164,6 +164,39 @@ class tokenRule implements IRule {
 	}
 }
 
+class funcRule implements IRule {
+	private IToken token;
+
+	public funcRule(IToken token) {
+		Assert.isNotNull(token);
+		this.token = token;
+	}
+
+	@Override
+	public IToken evaluate(ICharacterScanner scanner) {
+		int c = scanner.read();
+		if (c == '<') {
+			c = scanner.read();
+			if (isWordPart((char) c)) {
+				do {
+					c = scanner.read();
+				} while (c != '>');
+				c = scanner.read();
+				scanner.unread();
+				return token;
+			}
+			scanner.unread();
+			return Token.UNDEFINED;
+		}
+		scanner.unread();
+		return Token.UNDEFINED;
+	}
+
+	protected Boolean isWordPart(char c) {
+		return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z');
+	}
+}
+
 // class tokenRule2 {
 // private IToken token;
 //

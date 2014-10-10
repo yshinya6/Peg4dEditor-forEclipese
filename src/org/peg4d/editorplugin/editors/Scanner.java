@@ -50,8 +50,7 @@ class PEGScanner extends RuleBasedScanner {
 		IRule[] rules = { new tagRule(tag), new ConnectorRule(connector),
 				new labelRule(label), new SingleLineRule("`", "`", value),
 				new SingleLineRule("\"", "\"", string),
-				new SingleLineRule("'", "'", string),
-				new MultiLineRule("<", ">", function),
+				new SingleLineRule("'", "'", string), new funcRule(function),
 				new MultiLineRule("[example:", "]", example),
 				new SingleLineRule("[", "]", character), /* new tokenRule(token), */
 				new WhitespaceRule(new PegWhitespaceDetector()),
