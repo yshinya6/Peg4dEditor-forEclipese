@@ -56,7 +56,8 @@ public class PegContentAssistProcessor implements IContentAssistProcessor {
 			}
 			if (c == ' ' || c == '\t' || c == '\r' || c == '\n') {
 				continue;
-			} else if (c == '=' || c == '/') {
+			} else if (c == '=' || c == '/' || c == '!' || c == '?' || c == '{'
+					|| c == '(' || c == '@') {
 				int start = n + 1;
 				int len = offset - start;
 				String text;

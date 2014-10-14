@@ -1,10 +1,14 @@
 package org.peg4d.editorplugin.editors;
 
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextDoubleClickStrategy;
+import org.eclipse.jface.text.ITextViewer;
 
 public class PegDoubleClickStrategy implements ITextDoubleClickStrategy {
 	protected ITextViewer fText;
 
+	@Override
 	public void doubleClicked(ITextViewer part) {
 		int pos = part.getSelectedRange().x;
 
@@ -17,6 +21,7 @@ public class PegDoubleClickStrategy implements ITextDoubleClickStrategy {
 			selectWord(pos);
 		}
 	}
+
 	protected boolean selectComment(int caretPos) {
 		IDocument doc = fText.getDocument();
 		int startPos, endPos;
@@ -31,7 +36,8 @@ public class PegDoubleClickStrategy implements ITextDoubleClickStrategy {
 					pos -= 2;
 					continue;
 				}
-				if (c == Character.LINE_SEPARATOR || c == '\"')
+				if (c == Character.LINE_SEPARATOR || c == '\"' || c == '{'
+						|| c == '(' || c == '=' || c == '/')
 					break;
 				--pos;
 			}
@@ -47,7 +53,8 @@ public class PegDoubleClickStrategy implements ITextDoubleClickStrategy {
 
 			while (pos < length) {
 				c = doc.getChar(pos);
-				if (c == Character.LINE_SEPARATOR || c == '\"')
+				if (c == Character.LINE_SEPARATOR || c == '\"' || c == '{'
+						|| c == '(' || c == '=' || c == '/')
 					break;
 				++pos;
 			}
@@ -65,6 +72,7 @@ public class PegDoubleClickStrategy implements ITextDoubleClickStrategy {
 
 		return false;
 	}
+
 	protected boolean selectWord(int caretPos) {
 
 		IDocument doc = fText.getDocument();
@@ -77,7 +85,9 @@ public class PegDoubleClickStrategy implements ITextDoubleClickStrategy {
 
 			while (pos >= 0) {
 				c = doc.getChar(pos);
-				if (!Character.isJavaIdentifierPart(c))
+				if (Character.isWhitespace(c) || c == ' ' || c == '\"'
+						|| c == '{' || c == '(' || c == '=' || c == '/'
+						|| c == '@')
 					break;
 				--pos;
 			}
@@ -89,7 +99,9 @@ public class PegDoubleClickStrategy implements ITextDoubleClickStrategy {
 
 			while (pos < length) {
 				c = doc.getChar(pos);
-				if (!Character.isJavaIdentifierPart(c))
+				if (Character.isWhitespace(c) || c == ' ' || c == '\"'
+						|| c == '{' || c == '(' || c == '}' || c == ')'
+						|| c == '=' || c == '/' || c == '#')
 					break;
 				++pos;
 			}
