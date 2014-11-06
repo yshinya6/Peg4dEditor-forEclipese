@@ -1,10 +1,15 @@
 package org.peg4d.editorplugin.editors;
 
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewerExtension2;
+import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.MatchingCharacterPainter;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -16,7 +21,10 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.texteditor.IDocumentProvider;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
+import org.eclipse.ui.texteditor.SimpleMarkerAnnotation;
 
 import peg4deditorplug_in.Activator;
 
@@ -97,5 +105,33 @@ public class Peg4dEditor extends TextEditor implements IPropertyChangeListener {
 		contentAssistAction
 				.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
 		setAction(ASSIST_ACTION_ID, contentAssistAction);
+	}
+
+	public static void addAnnotation(IMarker marker, ITextSelection selection,
+			ITextEditor editor) {
+		// The DocumentProvider enables to get the document currently loaded in
+		// the editor
+		IDocumentProvider idp = editor.getDocumentProvider();
+
+		// This is the document we want to connect to. This is taken from
+		// the current editor input.
+		IDocument document = idp.getDocument(editor.getEditorInput());
+
+		// The IannotationModel enables to add/remove/change annotation to a
+		// Document
+		// loaded in an Editor
+		IAnnotationModel iamf = idp.getAnnotationModel(editor.getEditorInput());
+
+		// Note: The annotation type id specify that you want to create one of
+		// your
+		// annotations
+		SimpleMarkerAnnotation ma = new SimpleMarkerAnnotation(
+				"org.peg4d.editorplugin.occurences", marker);
+
+		// Finally add the new annotation to the model
+		iamf.connect(document);
+		iamf.addAnnotation(ma,
+				new Position(selection.getOffset(), selection.getLength()));
+		iamf.disconnect(document);
 	}
 }

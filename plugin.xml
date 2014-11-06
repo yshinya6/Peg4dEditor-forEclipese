@@ -91,4 +91,46 @@
          </action>
       </viewerContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors.annotationTypes">
+      <type
+            markerType="org.eclipse.core.resources.textmarker"
+            name="org.peg4d.editorplugin.occurences"
+            super="org.eclipse.jdt.ui.occurrences">
+      </type>
+   </extension>
+   <extension
+         id="org.peg4d.editroplugin.markers"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.textmarker"/>
+            <super type="org.eclipse.core.resources.marker"/>
+      <persistent value="true"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors.markerAnnotationSpecification">
+      <specification
+            annotationType="org.peg4d.editorplugin.occurences"
+            colorPreferenceValue="255,255,0"
+            highlightPreferenceKey="clhighlight"
+            highlightPreferenceValue="true"
+            includeOnPreferencePage="true"
+            label="Peg4dAnnotation"
+            overviewRulerPreferenceKey="clruler"
+            overviewRulerPreferenceValue="true"
+            textPreferenceKey="cltext"
+            textStylePreferenceKey="clstyle"
+            textStylePreferenceValue="BOX"
+            verticalRulerPreferenceKey="clvartical"
+            verticalRulerPreferenceValue="true">
+      </specification>
+   </extension>
+   <extension point="org.eclipse.ui.editors.markerUpdaters"> 
+               <updater
+                       id="org.peg4d.editorplugin.MarkerUpdater"
+                       class="org.peg4d.editorplugin.editors.MarkerUpdater"
+                       markerType="org.peg4d.editroplugin.markers">
+               </updater>
+</extension>:
+   
 </plugin>

@@ -69,7 +69,7 @@ class tagRule implements IRule {
 		if (c == '#') {
 			do {
 				c = scanner.read();
-			} while (isWordPart((char) c));
+			} while (isWordPart((char) c) || c == '.' || c == '_');
 			scanner.unread();
 			return token;
 		}
