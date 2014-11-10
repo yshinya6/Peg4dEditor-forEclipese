@@ -11,9 +11,9 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 
 public class PegHyperlinkDetector implements IHyperlinkDetector {
-	Peg4dEditor editor;
+	PegEditor editor;
 
-	public void init(Peg4dEditor editor) {
+	public void init(PegEditor editor) {
 		this.editor = editor;
 	}
 

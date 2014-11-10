@@ -3,21 +3,33 @@ package org.peg4d.editorplugin.editors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.jface.action.IAction;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.Region;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IEditorActionDelegate;
-import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.handlers.HandlerUtil;
 
-public class openAction implements IEditorActionDelegate {
-	private IEditorPart targetEditor = null;
+public class PegHyperlinkHandler extends AbstractHandler {
 
 	@Override
-	public void run(IAction action) {
-		PegEditor editor = (PegEditor) targetEditor;
+	public void addHandlerListener(IHandlerListener handlerListener) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		PegEditor editor = (PegEditor) HandlerUtil.getActiveEditor(event);
 		IDocument document = editor.getDocumentProvider().getDocument(
 				editor.getEditorInput());
 		String source = document.get();
@@ -30,6 +42,7 @@ public class openAction implements IEditorActionDelegate {
 		PegHyperlink link = new PegHyperlink(null, new Region(getLabelOffset(
 				source, word), word.length()), word, editor);
 		link.open();
+		return null;
 	}
 
 	private IRegion getWordRegion(String source, int offset) {
@@ -61,14 +74,21 @@ public class openAction implements IEditorActionDelegate {
 	}
 
 	@Override
-	public void selectionChanged(IAction action, ISelection selection) {
+	public boolean isEnabled() {
 		// TODO Auto-generated method stub
-
+		return true;
 	}
 
 	@Override
-	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
-		this.targetEditor = targetEditor;
+	public boolean isHandled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public void removeHandlerListener(IHandlerListener handlerListener) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

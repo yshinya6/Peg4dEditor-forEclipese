@@ -4,12 +4,12 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 
 public class PegHyperlink implements IHyperlink {
-	private Peg4dEditor editor;
+	private PegEditor editor;
 	private IRegion region, target;
 	String linkText;
 
 	public PegHyperlink(IRegion region, IRegion target, String linktext,
-			Peg4dEditor editor) {
+			PegEditor editor) {
 		this.region = region;
 		this.target = target;
 		this.linkText = linktext;
