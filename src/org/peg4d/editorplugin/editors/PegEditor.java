@@ -1,6 +1,9 @@
 package org.peg4d.editorplugin.editors;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -20,6 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.texteditor.IDocumentProvider;
@@ -27,6 +31,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.SimpleMarkerAnnotation;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.peg4d.ParsingContext;
 import org.peg4d.ParsingRule;
 import org.peg4d.UList;
 
@@ -158,21 +163,19 @@ public class PegEditor extends TextEditor implements IPropertyChangeListener {
 	@Override
 	public void doSaveAs() {
 		super.doSaveAs();
-
 		update();
 	}
 
 	@Override
 	public void doSave(IProgressMonitor progressMonitor) {
 		super.doSave(progressMonitor);
-
 		update();
 	}
 
 	private void update() {
 		IDocument document = getDocumentProvider().getDocument(getEditorInput());
 		PegSimpleParser parser = new PegSimpleParser(document.get());
-		UList<ParsingRule> ruleList = parser.parse();
+		UList<ParsingRule> ruleList = parser.parseGrammar();
 
 		// フォールディング範囲を最新状態に更新する
 		// foldingManager.updateFolding(document, models);
@@ -181,5 +184,40 @@ public class PegEditor extends TextEditor implements IPropertyChangeListener {
 		if (outlinePage != null) {
 			outlinePage.refresh(ruleList);
 		}
+
+		// エラーマーカを更新する
+		IFileEditorInput input = (IFileEditorInput) getEditorInput();
+		IResource resource = input.getFile();
+		try {
+			resource.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		parse(input.getFile(), document);
+	}
+
+	private void parse(IFile file, IDocument document) {
+		PegSimpleParser parser = new PegSimpleParser(document.get());
+		ParsingContext context = parser.parse();
+		if (context.isFailure()) {
+			try {
+				createErrorMarker(context, file, document);
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	private void createErrorMarker(ParsingContext context, IFile file, IDocument document)
+			throws CoreException {
+		int begin = (int) context.fpos;
+		int end = begin + 1;
+		IMarker marker = file.createMarker(IMarker.PROBLEM);
+		marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+		marker.setAttribute(IMarker.MESSAGE, context.getErrorMessage());
+		marker.setAttribute(IMarker.CHAR_START, begin);
+		marker.setAttribute(IMarker.CHAR_END, end);
 	}
 }
