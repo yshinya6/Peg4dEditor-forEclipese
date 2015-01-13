@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Peg4dEditorPlug-in
 Bundle-SymbolicName: org.peg4d.EditorPlug-in;singleton:=true
-Bundle-Version: 0.4.3.qualifier
+Bundle-Version: 0.6.1.qualifier
 Bundle-Activator: peg4deditorplug_in.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -14,6 +14,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.core,
  org.eclipse.pde.ui,
  org.eclipse.jdt.ui,
- org.eclipse.ui.console
+ org.eclipse.ui.console,
+ org.eclipse.ui.views
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .,
+ lib/nez-0.9.jar

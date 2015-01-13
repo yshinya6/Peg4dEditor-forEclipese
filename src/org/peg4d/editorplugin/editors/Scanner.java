@@ -13,9 +13,11 @@ import org.eclipse.jface.text.rules.WordRule;
 import org.peg4d.editorplugin.preference.PreferenceConstants;
 
 class PEGScanner extends RuleBasedScanner {
+	ColorManager manager;
+
 	public PEGScanner(ColorManager manager) {
-		IToken token = new Token(new TextAttribute(
-				manager.getColor(IPegColorConstants.DEFAULT)));
+		this.manager = manager;
+		IToken token = new Token(new TextAttribute(manager.getColor(IPegColorConstants.DEFAULT)));
 		// IToken connector = new Token(new TextAttribute(
 		// manager.getColor(IPegColorConstants.PEG_CONNECTOR)));
 		// IToken tag = new Token(new TextAttribute(
@@ -30,35 +32,40 @@ class PEGScanner extends RuleBasedScanner {
 		// manager.getColor(IPegColorConstants.PEG_CHARACTER)));
 		// IToken example = new Token(new TextAttribute(
 		// manager.getColor(IPegColorConstants.PEG_EXAMPLE)));
-		IToken connector = new Token(new TextAttribute(
-				manager.getColor(PreferenceConstants.COLOR_CONNECTOR)));
-		IToken tag = new Token(new TextAttribute(
-				manager.getColor(PreferenceConstants.COLOR_TAG)));
-		IToken string = new Token(new TextAttribute(
-				manager.getColor(PreferenceConstants.COLOR_STRING)));
-		IToken label = new Token(new TextAttribute(
-				manager.getColor(PreferenceConstants.COLOR_LABEL)));
-		IToken value = new Token(new TextAttribute(
-				manager.getColor(PreferenceConstants.COLOR_VALUE)));
-		IToken character = new Token(new TextAttribute(
-				manager.getColor(PreferenceConstants.COLOR_CHARACTER)));
-		IToken example = new Token(new TextAttribute(
-				manager.getColor(PreferenceConstants.COLOR_EXAMPLE)));
-		IToken function = new Token(new TextAttribute(
-				manager.getColor(PreferenceConstants.COLOR_FUNCTION)));
+		IToken connector = new Token(new TextAttribute(manager.getColor(PreferenceConstants.COLOR_CONNECTOR)));
+		IToken tag = new Token(new TextAttribute(manager.getColor(PreferenceConstants.COLOR_TAG)));
+		IToken string = new Token(new TextAttribute(manager.getColor(PreferenceConstants.COLOR_STRING)));
+		IToken label = new Token(new TextAttribute(manager.getColor(PreferenceConstants.COLOR_LABEL)));
+		IToken value = new Token(new TextAttribute(manager.getColor(PreferenceConstants.COLOR_VALUE)));
+		IToken character = new Token(new TextAttribute(manager.getColor(PreferenceConstants.COLOR_CHARACTER)));
+		IToken example = new Token(new TextAttribute(manager.getColor(PreferenceConstants.COLOR_EXAMPLE)));
+		IToken function = new Token(new TextAttribute(manager.getColor(PreferenceConstants.COLOR_FUNCTION)));
 
-		IRule[] rules = { new tagRule(tag), new ConnectorRule(connector),
-				new labelRule(label), new SingleLineRule("`", "`", value),
-				new SingleLineRule("\"", "\"", string),
-				new SingleLineRule("'", "'", string), new funcRule(function),
-				new MultiLineRule("[example:", "]", example),
-				new SingleLineRule("[", "]", character), /* new tokenRule(token), */
+		IRule[] rules = { new tagRule(tag), new ConnectorRule(connector), new labelRule(label), new SingleLineRule("`", "`", value),
+				new SingleLineRule("\"", "\"", string), new SingleLineRule("'", "'", string), new MultiLineRule("<", ">", function),
+				new MultiLineRule("[example:", "]", example), new SingleLineRule("[", "]", character),
 				new WhitespaceRule(new PegWhitespaceDetector()),
 		/* new PegWordRule("@", connecter) */};
 
 		setRules(rules);
 	}
 
+	public void init() {
+		IToken connector = new Token(new TextAttribute(manager.getColor(PreferenceConstants.COLOR_CONNECTOR)));
+		IToken tag = new Token(new TextAttribute(manager.getColor(PreferenceConstants.COLOR_TAG)));
+		IToken string = new Token(new TextAttribute(manager.getColor(PreferenceConstants.COLOR_STRING)));
+		IToken label = new Token(new TextAttribute(manager.getColor(PreferenceConstants.COLOR_LABEL)));
+		IToken value = new Token(new TextAttribute(manager.getColor(PreferenceConstants.COLOR_VALUE)));
+		IToken character = new Token(new TextAttribute(manager.getColor(PreferenceConstants.COLOR_CHARACTER)));
+		IToken example = new Token(new TextAttribute(manager.getColor(PreferenceConstants.COLOR_EXAMPLE)));
+		IToken function = new Token(new TextAttribute(manager.getColor(PreferenceConstants.COLOR_FUNCTION)));
+
+		IRule[] rules = { new tagRule(tag), new ConnectorRule(connector), new labelRule(label), new SingleLineRule("`", "`", value),
+				new SingleLineRule("\"", "\"", string), new SingleLineRule("'", "'", string), new funcRule(function),
+				new MultiLineRule("[example:", "]", example), new SingleLineRule("[", "]", character),
+				new WhitespaceRule(new PegWhitespaceDetector()), };
+		setRules(rules);
+	}
 }
 
 class PegWordRule extends WordRule {

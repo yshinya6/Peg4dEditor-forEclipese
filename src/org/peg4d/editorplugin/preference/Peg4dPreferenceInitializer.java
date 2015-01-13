@@ -9,6 +9,8 @@ import peg4deditorplug_in.Activator;
 
 public class Peg4dPreferenceInitializer extends AbstractPreferenceInitializer {
 
+	public static String COMPOSER_NAME = "yshinya6";
+
 	@Override
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();

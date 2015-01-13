@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.ITextSelection;
@@ -191,13 +192,13 @@ public class PegEditor extends TextEditor implements IPropertyChangeListener {
 		try {
 			resource.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		parse(input.getFile(), document);
+		validate(input.getFile(), document);
 	}
 
-	private void parse(IFile file, IDocument document) {
+	private void validate(IFile file, IDocument document) {
+
 		PegSimpleParser parser = new PegSimpleParser(document.get());
 		ParsingContext context = parser.parse();
 		if (context.isFailure()) {
@@ -207,7 +208,28 @@ public class PegEditor extends TextEditor implements IPropertyChangeListener {
 				e.printStackTrace();
 			}
 		}
-
+		/* iterative parsing is not working */
+		// while (offset < length) {
+		// PegSimpleParser parser;
+		// try {
+		// parser = new PegSimpleParser(document.get(offset, length));
+		// ParsingContext context = parser.parse();
+		// if (context.isFailure()) {
+		// try {
+		// createErrorMarker(context, file, document);
+		// } catch (CoreException e) {
+		// e.printStackTrace();
+		// }
+		// int fpos = (int) context.fpos;
+		// int nextLine = document.getLineOfOffset(fpos) + 1;
+		// offset = document.getLineOffset(nextLine);
+		// } else {
+		// offset = length;
+		// }
+		// } catch (BadLocationException e1) {
+		// e1.printStackTrace();
+		// }
+		// }
 	}
 
 	private void createErrorMarker(ParsingContext context, IFile file, IDocument document)
@@ -217,6 +239,11 @@ public class PegEditor extends TextEditor implements IPropertyChangeListener {
 		IMarker marker = file.createMarker(IMarker.PROBLEM);
 		marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
 		marker.setAttribute(IMarker.MESSAGE, context.getErrorMessage());
+		try {
+			marker.setAttribute(IMarker.LINE_NUMBER, document.getLineOfOffset(begin) + 1);
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
 		marker.setAttribute(IMarker.CHAR_START, begin);
 		marker.setAttribute(IMarker.CHAR_END, end);
 	}

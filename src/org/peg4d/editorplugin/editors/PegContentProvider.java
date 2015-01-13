@@ -61,8 +61,9 @@ public class PegContentProvider implements ITreeContentProvider {
 				nonTerminalRules.add(parentList.get(i));
 			}
 		}
-		RuleSet nonTerminalRuleSet = new RuleSet("RULES", nonTerminalRules);
-		RuleSet literalRuleSet = new RuleSet("LITERALS", literals);
+		RuleSet nonTerminalRuleSet = new RuleSet("RULES (" + nonTerminalRules.size() + ")",
+				nonTerminalRules);
+		RuleSet literalRuleSet = new RuleSet("LITERALS (" + literals.size() + ")", literals);
 		newList.add(nonTerminalRuleSet);
 		newList.add(literalRuleSet);
 		return newList;

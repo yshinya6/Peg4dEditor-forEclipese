@@ -51,8 +51,8 @@ public class PegConfiguration extends SourceViewerConfiguration {
 	}
 
 	public void updatePreferences() {
+		getPEGScanner().init();
 		PresentationReconciler reconciler = new PresentationReconciler();
-		getPEGScanner();
 		NonRuleBasedDamagerRepairer ndr = new NonRuleBasedDamagerRepairer(new TextAttribute(
 				colorManager.getColor(PreferenceConstants.COLOR_COMMENT)));
 		reconciler.setDamager(ndr, PegPartitionScanner.PEG_COMMENT);
