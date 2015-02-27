@@ -51,9 +51,6 @@ public class PegContentProvider implements ITreeContentProvider {
 	public UList<ParsingRule> extractLiteralRules(UList<ParsingRule> parentList) {
 		ArrayList<ParsingRule> literals = new ArrayList<>();
 		ArrayList<ParsingRule> nonTerminalRules = new ArrayList<>();
-		ArrayList<ParsingRule> lexicalRules = new ArrayList<>();
-		ArrayList<ParsingRule> objectRules = new ArrayList<>();
-		ArrayList<ParsingRule> operationRules = new ArrayList<>();
 		UList<ParsingRule> newList = new UList<ParsingRule>(new ParsingRule[4]);
 
 		//		for (ParsingRule parsingRule : parentList) {
