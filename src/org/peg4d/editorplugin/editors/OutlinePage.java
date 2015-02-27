@@ -27,7 +27,7 @@ public class OutlinePage extends ContentOutlinePage {
 
 		IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
 		PegSimpleParser parser = new PegSimpleParser(document.get());
-		UList<ParsingRule> ruleList = parser.parseGrammar();
+		UList<ParsingRule> ruleList = parser.getRuleList();
 		refresh(ruleList);
 	}
 

@@ -131,6 +131,13 @@
                        class="org.peg4d.editorplugin.editors.MarkerUpdater"
                        markerType="org.peg4d.editroplugin.markers">
                </updater>
-</extension>:
+</extension>
+   <extension
+         point="org.eclipse.core.filebuffers.annotationModelCreation">
+      <factory
+		extensions="*"
+		class="org.eclipse.ui.texteditor.ResourceMarkerAnnotationModelFactory">
+	</factory>
+   </extension>:
    
 </plugin>

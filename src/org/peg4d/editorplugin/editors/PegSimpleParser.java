@@ -6,6 +6,8 @@ import org.peg4d.ParsingContext;
 import org.peg4d.ParsingRule;
 import org.peg4d.ParsingSource;
 import org.peg4d.UList;
+import org.peg4d.editorplugin.parser.EditorSource;
+import org.peg4d.editorplugin.parser.PegGrammar;
 
 public class PegSimpleParser {
 	private String sourceText;
@@ -16,16 +18,16 @@ public class PegSimpleParser {
 		this.factory = new GrammarFactory();
 	}
 
-	public UList<ParsingRule> parseGrammar() {
-		ParsingSource source = org.peg4d.ParsingSource.loadSourceText(sourceText);
-		Grammar peg = new Grammar(factory, "target");
+	public UList<ParsingRule> getRuleList() {
+		ParsingSource source = EditorSource.loadTargetSource(sourceText);
+		PegGrammar peg = new PegGrammar(factory, "target");
 		peg.loadGrammar(source);
 		UList<ParsingRule> ruleList = peg.getRuleList();
 		return ruleList;
 	}
 
 	public ParsingContext parse() {
-		ParsingSource source = org.peg4d.ParsingSource.loadSourceText(sourceText);
+		ParsingSource source = EditorSource.loadTargetSource(sourceText);
 		Grammar peg4d = GrammarFactory.Grammar;
 		ParsingContext context = new ParsingContext(source);
 		while (context.hasByteChar()) {

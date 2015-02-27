@@ -18,7 +18,7 @@ public class OutlineSelectionChangedListener implements ISelectionChangedListene
 	public void selectionChanged(SelectionChangedEvent event) {
 		IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 		Object element = selection.getFirstElement();
-
+		//ルールの位置を特定し，カーソルを移動させる
 		if (element instanceof ParsingRule) {
 			ParsingRule rule = (ParsingRule) element;
 			ParsingObject po = rule.po;

@@ -58,9 +58,6 @@ public class PegEditor extends TextEditor implements IPropertyChangeListener {
 
 	@Override
 	public void dispose() {
-		// // delete preference listener
-		// Activator.getDefault().getPreferenceStore()
-		// .removePropertyChangeListener(this);
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		store.removePropertyChangeListener(this);
 		colorManager.dispose();
@@ -97,8 +94,8 @@ public class PegEditor extends TextEditor implements IPropertyChangeListener {
 
 	@Override
 	protected void initializeKeyBindingScopes() {
-		setKeyBindingScopes(new String[] { "org.eclipse.ui.textEditorScope",
-				"peg4d-editor-plugin.context" });
+		setKeyBindingScopes(new String[]{"org.eclipse.ui.textEditorScope",
+				"peg4d-editor-plugin.context"});
 	}
 
 	@Override
@@ -176,10 +173,7 @@ public class PegEditor extends TextEditor implements IPropertyChangeListener {
 	private void update() {
 		IDocument document = getDocumentProvider().getDocument(getEditorInput());
 		PegSimpleParser parser = new PegSimpleParser(document.get());
-		UList<ParsingRule> ruleList = parser.parseGrammar();
-
-		// フォールディング範囲を最新状態に更新する
-		// foldingManager.updateFolding(document, models);
+		UList<ParsingRule> ruleList = parser.getRuleList();
 
 		// アウトラインを最新状態に更新する
 		if (outlinePage != null) {
@@ -208,28 +202,6 @@ public class PegEditor extends TextEditor implements IPropertyChangeListener {
 				e.printStackTrace();
 			}
 		}
-		/* iterative parsing is not working */
-		// while (offset < length) {
-		// PegSimpleParser parser;
-		// try {
-		// parser = new PegSimpleParser(document.get(offset, length));
-		// ParsingContext context = parser.parse();
-		// if (context.isFailure()) {
-		// try {
-		// createErrorMarker(context, file, document);
-		// } catch (CoreException e) {
-		// e.printStackTrace();
-		// }
-		// int fpos = (int) context.fpos;
-		// int nextLine = document.getLineOfOffset(fpos) + 1;
-		// offset = document.getLineOffset(nextLine);
-		// } else {
-		// offset = length;
-		// }
-		// } catch (BadLocationException e1) {
-		// e1.printStackTrace();
-		// }
-		// }
 	}
 
 	private void createErrorMarker(ParsingContext context, IFile file, IDocument document)

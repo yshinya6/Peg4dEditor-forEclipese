@@ -95,9 +95,13 @@ class labelRule implements IRule {
 	public IToken evaluate(ICharacterScanner scanner) {
 		int c = scanner.read();
 		if (isLetterPart((char) c)) {
+
+			//ルール名を読み進める
 			do {
 				c = scanner.read();
 			} while ((isWordPart((char) c)));
+			//"="か"[e"を見つけられればルール名と判断する．
+			scanner.unread();
 			do {
 				c = scanner.read();
 				if (c == '[') {
