@@ -6,7 +6,7 @@
          point="org.eclipse.ui.editors">
       <editor
             name="Peg4d Editor"
-            extensions="peg,p4d"
+            extensions="peg,p4d,nez"
             icon="icons/sample.gif"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             class="org.peg4d.editorplugin.editors.PegEditor"
