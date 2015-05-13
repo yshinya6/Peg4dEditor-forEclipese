@@ -47,8 +47,7 @@ public class PegHyperlinkHandler extends AbstractHandler {
 
 	private IRegion getWordRegion(String source, int offset) {
 		int start = offset;
-		for (; start >= 0 && isWordChar(source, start); start--)
-			;
+		for (; start >= 0 && isWordChar(source, start); start--);
 		start++;
 		int end = offset;
 		for (; end < source.length(); end++) {

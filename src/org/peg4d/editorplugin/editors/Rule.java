@@ -57,12 +57,10 @@ class ConnectorRule implements IRule {
 
 class tagRule implements IRule {
 	private IToken token;
-
 	public tagRule(IToken token) {
 		Assert.isNotNull(token);
 		this.token = token;
 	}
-
 	@Override
 	public IToken evaluate(ICharacterScanner scanner) {
 		int c = scanner.read();
@@ -85,17 +83,14 @@ class tagRule implements IRule {
 
 class labelRule implements IRule {
 	private IToken token;
-
 	public labelRule(IToken token) {
 		Assert.isNotNull(token);
 		this.token = token;
 	}
-
 	@Override
 	public IToken evaluate(ICharacterScanner scanner) {
 		int c = scanner.read();
 		if (isLetterPart((char) c)) {
-
 			//ルール名を読み進める
 			do {
 				c = scanner.read();

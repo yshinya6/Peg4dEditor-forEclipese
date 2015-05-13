@@ -21,7 +21,6 @@ public class PegHyperlinkDetector implements IHyperlinkDetector {
 		// d + "[ \n\t\r]*="
 		Pattern p = Pattern.compile("^[ \t]*" + word + "(\\s*\\[[^\\]]*\\])?"
 				+ "\\s*=", Pattern.MULTILINE);
-		// Pattern p = Pattern.compile(word + "[\\s]*=");
 		Matcher m = p.matcher(source);
 		boolean matched = m.find();
 		return m.start();
@@ -39,8 +38,8 @@ public class PegHyperlinkDetector implements IHyperlinkDetector {
 		IRegion wordRegion = getWordRegion(source, offset);
 		String word = source.substring(wordRegion.getOffset(),
 				wordRegion.getOffset() + wordRegion.getLength());
-		return new IHyperlink[] { new PegHyperlink(region, new Region(
-				getLabelOffset(source, word), word.length()), word, editor) };
+		return new IHyperlink[]{new PegHyperlink(region, new Region(
+				getLabelOffset(source, word), word.length()), word, editor)};
 	}
 
 	// private boolean findlabel(String source, String word) {
@@ -49,8 +48,7 @@ public class PegHyperlinkDetector implements IHyperlinkDetector {
 
 	private IRegion getWordRegion(String source, int offset) {
 		int start = offset;
-		for (; start >= 0 && isWordChar(source, start); start--)
-			;
+		for (; start >= 0 && isWordChar(source, start); start--);
 		start++;
 		int end = offset;
 		for (; end < source.length(); end++) {

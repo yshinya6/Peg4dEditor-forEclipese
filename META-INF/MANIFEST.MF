@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Peg4dEditorPlug-in
 Bundle-SymbolicName: org.peg4d.EditorPlug-in;singleton:=true
-Bundle-Version: 0.6.4.qualifier
+Bundle-Version: 0.7.1.qualifier
 Bundle-Activator: peg4deditorplug_in.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,

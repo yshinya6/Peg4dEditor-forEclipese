@@ -30,7 +30,7 @@ public class PegConfiguration extends SourceViewerConfiguration {
 
 	@Override
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
-		return new String[] { IDocument.DEFAULT_CONTENT_TYPE, PegPartitionScanner.PEG_COMMENT };
+		return new String[]{IDocument.DEFAULT_CONTENT_TYPE, PegPartitionScanner.PEG_COMMENT};
 	}
 
 	@Override
@@ -62,16 +62,13 @@ public class PegConfiguration extends SourceViewerConfiguration {
 	@Override
 	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
 		PresentationReconciler reconciler = new PresentationReconciler();
-
 		DefaultDamagerRepairer dr = new DefaultDamagerRepairer(getPEGScanner());
 		reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
 		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
-
 		NonRuleBasedDamagerRepairer ndr = new NonRuleBasedDamagerRepairer(new TextAttribute(
 				colorManager.getColor(PreferenceConstants.COLOR_COMMENT)));
 		reconciler.setDamager(ndr, PegPartitionScanner.PEG_COMMENT);
 		reconciler.setRepairer(ndr, PegPartitionScanner.PEG_COMMENT);
-
 		return reconciler;
 	}
 

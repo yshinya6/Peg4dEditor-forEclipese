@@ -28,12 +28,14 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.texteditor.IDocumentProvider;
+import org.eclipse.ui.texteditor.IDocumentProviderExtension;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.SimpleMarkerAnnotation;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.peg4d.ParsingContext;
 import org.peg4d.ParsingRule;
+import org.peg4d.ReportSet;
 import org.peg4d.UList;
 
 import peg4deditorplug_in.Activator;
@@ -48,7 +50,6 @@ public class PegEditor extends TextEditor implements IPropertyChangeListener {
 		colorManager = new ColorManager();
 		setDocumentProvider(new PegDocumentProvider());
 		setSourceViewerConfiguration(new PegConfiguration(colorManager));
-
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		store.addPropertyChangeListener(this);
 		// // add preference listener
@@ -64,6 +65,7 @@ public class PegEditor extends TextEditor implements IPropertyChangeListener {
 		super.dispose();
 	}
 
+	// 
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		PegConfiguration config = (PegConfiguration) getSourceViewerConfiguration();
@@ -74,11 +76,9 @@ public class PegEditor extends TextEditor implements IPropertyChangeListener {
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
-
 		MatchingCharacterPainter painter = new MatchingCharacterPainter(getSourceViewer(),
 				new PegObjectMatcher());
 		painter.setColor(Display.getDefault().getSystemColor(SWT.COLOR_GRAY));
-
 		ITextViewerExtension2 extension = (ITextViewerExtension2) getSourceViewer();
 		extension.addPainter(painter);
 	}
@@ -86,7 +86,6 @@ public class PegEditor extends TextEditor implements IPropertyChangeListener {
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		super.init(site, input);
-
 		PegConfiguration configuration = (PegConfiguration) getSourceViewerConfiguration();
 		PegHyperlinkDetector detector = configuration.getPegHyperlinkDetector();
 		detector.init(this);
@@ -148,13 +147,6 @@ public class PegEditor extends TextEditor implements IPropertyChangeListener {
 			}
 			return outlinePage;
 		}
-
-		// // フォールディング
-		// Object obj = foldingManager.getAdapter(adapter);
-		// if (obj != null) {
-		// return obj;
-		// }
-
 		return super.getAdapter(adapter);
 	}
 
@@ -171,16 +163,17 @@ public class PegEditor extends TextEditor implements IPropertyChangeListener {
 	}
 
 	private void update() {
+		getSourceViewer().invalidateTextPresentation();
 		IDocument document = getDocumentProvider().getDocument(getEditorInput());
 		PegSimpleParser parser = new PegSimpleParser(document.get());
 		UList<ParsingRule> ruleList = parser.getRuleList();
 
-		// アウトラインを最新状態に更新する
+		// update outline page
 		if (outlinePage != null) {
 			outlinePage.refresh(ruleList);
 		}
 
-		// エラーマーカを更新する
+		// update marker
 		IFileEditorInput input = (IFileEditorInput) getEditorInput();
 		IResource resource = input.getFile();
 		try {
@@ -192,7 +185,6 @@ public class PegEditor extends TextEditor implements IPropertyChangeListener {
 	}
 
 	private void validate(IFile file, IDocument document) {
-
 		PegSimpleParser parser = new PegSimpleParser(document.get());
 		ParsingContext context = parser.parse();
 		if (context.isFailure()) {
@@ -200,23 +192,82 @@ public class PegEditor extends TextEditor implements IPropertyChangeListener {
 				createErrorMarker(context, file, document);
 			} catch (CoreException e) {
 				e.printStackTrace();
+			} catch (BadLocationException e) {
+				e.printStackTrace();
+			}
+		} else {
+			UList<ParsingRule> ruleList = parser.getRuleList();
+			for (ParsingRule parsingRule : ruleList) {
+				collectReportInfo(parsingRule);
+				if (!parsingRule.reportList.isEmpty()) {
+					try {
+						createReportMarker(parsingRule, file, document);
+					} catch (BadLocationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (CoreException e) {
+						// TODO: handle exception
+					}
+				}
 			}
 		}
 	}
-
+	// create report marker for each rule
+	private void createReportMarker(ParsingRule parsingRule, IFile file, IDocument document)
+			throws BadLocationException, CoreException {
+		for (ReportSet report : parsingRule.reportList) {
+			int begin = report.pos;
+			int lineNum = document.getLineOfOffset(begin);
+			int eol = begin + document.getLineLength(lineNum);
+			int end = eol;
+			for (int i = begin + 1; i < eol; i++) {
+				if (document.getChar(i) == ' ') {
+					end = i;
+					break;
+				}
+			}
+			IMarker marker = file.createMarker(IMarker.PROBLEM);
+			switch (report.level) {
+				case error :
+					marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+				case warning :
+					marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
+				default :
+					break;
+			}
+			marker.setAttribute(IMarker.MESSAGE, report.msg);
+			marker.setAttribute(IMarker.LINE_NUMBER, lineNum + 1);
+			marker.setAttribute(IMarker.CHAR_START, begin);
+			marker.setAttribute(IMarker.CHAR_END, end);
+		}
+	}
+	// create error marker when fail parsing
 	private void createErrorMarker(ParsingContext context, IFile file, IDocument document)
-			throws CoreException {
-		int begin = (int) context.fpos;
-		int end = begin + 1;
+			throws CoreException, BadLocationException {
+		int lineNum = document.getLineOfOffset((int) context.fpos);
+		int begin = document.getLineOffset(lineNum - 1);
+		int end = begin + document.getLineLength(lineNum - 1);
 		IMarker marker = file.createMarker(IMarker.PROBLEM);
 		marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
 		marker.setAttribute(IMarker.MESSAGE, context.getErrorMessage());
-		try {
-			marker.setAttribute(IMarker.LINE_NUMBER, document.getLineOfOffset(begin) + 1);
-		} catch (BadLocationException e) {
-			e.printStackTrace();
-		}
+		marker.setAttribute(IMarker.LINE_NUMBER, lineNum);
 		marker.setAttribute(IMarker.CHAR_START, begin);
 		marker.setAttribute(IMarker.CHAR_END, end);
+	}
+	// collect report set from Parsing Expression in the rule
+	private void collectReportInfo(ParsingRule rule) {
+		ReportChecker visitor = new ReportChecker();
+		visitor.visitRule(rule);
+		rule.reportList = visitor.entireReportList;
+	}
+
+	public void refresh() {
+		IDocumentProvider provider = getDocumentProvider();
+		IDocumentProviderExtension extension = (IDocumentProviderExtension) provider;
+		try {
+			extension.synchronize(getEditorInput());
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
 	}
 }
